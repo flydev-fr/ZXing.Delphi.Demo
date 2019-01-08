@@ -8,8 +8,8 @@ Fork of the [ZXing Delphi](https://github.com/Spelt/ZXing.Delphi) Advanced Test 
 
 For **Delphi 10.3 Rio**
 
-Version base [3.7](https://github.com/Spelt/ZXing.Delphi/tree/v3.7/demo/advancedTestApp) 
-
+Test #1: Version base [3.7](https://github.com/Spelt/ZXing.Delphi/tree/v3.7/demo/advancedTestApp) 
+Test #2: Version base [3.8.1](https://github.com/Spelt/ZXing.Delphi/tree/v3.8.1/demo/advancedTestApp) 
 
 # References
 
