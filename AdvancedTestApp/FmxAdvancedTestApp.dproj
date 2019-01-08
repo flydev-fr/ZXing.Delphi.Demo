@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>FmxAdvancedTestApp.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release-Fast</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Android</Platform>
         <TargetedPlatforms>1111</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -94,33 +94,6 @@
         <Cfg_2>true</Cfg_2>
         <Base>true</Base>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Release-Fast' or '$(Cfg_3)'!=''">
-        <Cfg_3>true</Cfg_3>
-        <CfgParent>Cfg_2</CfgParent>
-        <Cfg_2>true</Cfg_2>
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='Android' and '$(Cfg_3)'=='true') or '$(Cfg_3_Android)'!=''">
-        <Cfg_3_Android>true</Cfg_3_Android>
-        <CfgParent>Cfg_3</CfgParent>
-        <Cfg_3>true</Cfg_3>
-        <Cfg_2>true</Cfg_2>
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='iOSDevice32' and '$(Cfg_3)'=='true') or '$(Cfg_3_iOSDevice32)'!=''">
-        <Cfg_3_iOSDevice32>true</Cfg_3_iOSDevice32>
-        <CfgParent>Cfg_3</CfgParent>
-        <Cfg_3>true</Cfg_3>
-        <Cfg_2>true</Cfg_2>
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='iOSDevice64' and '$(Cfg_3)'=='true') or '$(Cfg_3_iOSDevice64)'!=''">
-        <Cfg_3_iOSDevice64>true</Cfg_3_iOSDevice64>
-        <CfgParent>Cfg_3</CfgParent>
-        <Cfg_3>true</Cfg_3>
-        <Cfg_2>true</Cfg_2>
-        <Base>true</Base>
-    </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
@@ -161,8 +134,11 @@
         <Android_SplashImage640>$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png</Android_SplashImage640>
         <Android_SplashImage960>$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png</Android_SplashImage960>
         <EnabledSysJars>android-support-v4.dex.jar;cloud-messaging.dex.jar;fmx.dex.jar;google-analytics-v2.dex.jar;google-play-billing.dex.jar;google-play-licensing.dex.jar;google-play-services.dex.jar</EnabledSysJars>
+        <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
+        <AUP_ACCESS_FINE_LOCATION>false</AUP_ACCESS_FINE_LOCATION>
+        <AUP_ACCESS_COARSE_LOCATION>false</AUP_ACCESS_COARSE_LOCATION>
         <VerInfo_Build>1</VerInfo_Build>
-        <DCC_UnitSearchPath>Custom;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>simd;custom;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_iOSDevice32)'!=''">
         <DCC_UsePackage>DBXSqliteDriver;IndyIPCommon;bindcompdbx;DBXInterBaseDriver;IndyIPServer;IndySystem;tethering;fmxFireDAC;bindcompfmx;FMXTee;DbxCommonDriver;FmxTeeUI;fmx;xmlrtl;rtl;DbxClientDriver;CustomIPTransport;dbexpress;IndyCore;bindcomp;dsnap;IndyIPClient;dbxcds;bindengine;dsnapxml;dbrtl;IndyProtocols;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
@@ -205,7 +181,7 @@
         <iPad_SpotLight100>$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_100x100.png</iPad_SpotLight100>
         <iPad_Setting29>$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_29x29.png</iPad_Setting29>
         <iPad_Setting58>$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_58x58.png</iPad_Setting58>
-        <DCC_UnitSearchPath>custom;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>simd;custom;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <iPhone_Launch1125>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_1125x2436.png</iPhone_Launch1125>
         <iPhone_Launch2436>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2436x1125.png</iPhone_Launch2436>
     </PropertyGroup>
@@ -250,7 +226,7 @@
         <iPad_SpotLight100>$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_100x100.png</iPad_SpotLight100>
         <iPad_Setting29>$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_29x29.png</iPad_Setting29>
         <iPad_Setting58>$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_58x58.png</iPad_Setting58>
-        <DCC_UnitSearchPath>custom;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>simd;custom;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <iPhone_Launch1125>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_1125x2436.png</iPhone_Launch1125>
         <iPhone_Launch2436>$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2436x1125.png</iPhone_Launch2436>
     </PropertyGroup>
@@ -301,8 +277,6 @@
         <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=$(MSBuildProjectName);CFBundleVersion=1.0.0;CFBundlePackageType=APPL;CFBundleSignature=????;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);NSHighResolutionCapable=true;LSApplicationCategoryType=public.app-category.utilities;NSLocationAlwaysUsageDescription=The reason for accessing the location information of the user;NSLocationWhenInUseUsageDescription=The reason for accessing the location information of the user;NSContactsUsageDescription=The reason for accessing the contacts;CFBundleShortVersionString=1.0.0;NSLocationAlwaysAndWhenInUseUsageDescription=The reason for accessing the location information of the user</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <Debugger_Launcher>/usr/X11/bin/xterm -e &quot;%debuggee%&quot;</Debugger_Launcher>
-        <Manifest_File>(vide)</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>DBXSqliteDriver;IndyIPCommon;bindcompdbx;DBXInterBaseDriver;vcl;IndyIPServer;vclactnband;vclFireDAC;IndySystem;tethering;svnui;dsnapcon;FireDACADSDriver;FireDACMSAccDriver;fmxFireDAC;vclimg;TeeDB;vcltouch;vcldb;bindcompfmx;svn;Intraweb;FireDACPgDriver;inetdb;FMXTee;DbxCommonDriver;FmxTeeUI;fmx;fmxdae;xmlrtl;Tee;fmxobj;vclwinx;rtl;DbxClientDriver;CustomIPTransport;vcldsnap;dbexpress;IndyCore;vclx;bindcomp;appanalytics;dsnap;IndyIPClient;bindcompvcl;TeeUI;VCLRESTComponents;dbxcds;VclSmp;adortl;vclie;bindengine;DBXMySQLDriver;dsnapxml;FireDACMySQLDriver;dbrtl;IndyProtocols;inetdbxpress;FireDACCommonODBC;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
@@ -336,7 +310,6 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Android)'!=''">
         <VerInfo_Build>1</VerInfo_Build>
-        <Debugger_DebugSourcePath>C:\Users\kingspark\Documents\Embarcadero\Studio\Library\ZXing.Delphi-3.7\demo\advancedTestApp\Fast\;C:\Users\kingspark\Documents\Embarcadero\Studio\Library\ZXing.Delphi-3.7\demo\advancedTestApp\SIMD\;C:\Users\kingspark\Documents\Embarcadero\Studio\Library\ZXing.Delphi-3.7\demo\advancedTestApp\Fast.not\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
@@ -363,22 +336,6 @@
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Cfg_3_Android)'!=''">
-        <DCC_UnitSearchPath>Fast;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <VerInfo_Build>1</VerInfo_Build>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Cfg_3_iOSDevice32)'!=''">
-        <DCC_UnitSearchPath>Fast;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
-        <VerInfo_BundleId>$(MSBuildProjectName)</VerInfo_BundleId>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Cfg_3_iOSDevice64)'!=''">
-        <DCC_UnitSearchPath>Fast;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_UIDeviceFamily>iPhoneAndiPad</VerInfo_UIDeviceFamily>
-        <VerInfo_BundleId>$(MSBuildProjectName)</VerInfo_BundleId>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -463,23 +420,19 @@
         <DCCReference Include="..\Lib\Classes\1D Barcodes\ZXing.OneD.UPCAReader.pas"/>
         <DCCReference Include="..\Lib\Classes\1D Barcodes\ZXing.OneD.Code39Reader.pas"/>
         <DCCReference Include="..\Lib\Classes\1D Barcodes\ZXing.OneD.UPCEReader.pas"/>
-        <DCCReference Include="AudioManager\AudioManager.pas"/>
-        <DCCReference Include="SIMD\FastUtils.pas"/>
-        <DCCReference Include="Custom\FMX.Media.Android.pas"/>
-        <BuildConfiguration Include="Base">
-            <Key>Base</Key>
-        </BuildConfiguration>
+        <DCCReference Include="AudioManager\AudioManager.pas">
+            <Form>$R *.res</Form>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
+        <BuildConfiguration Include="Base">
+            <Key>Base</Key>
+        </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
             <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
-        <BuildConfiguration Include="Release-Fast">
-            <Key>Cfg_3</Key>
-            <CfgParent>Cfg_2</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
     <ProjectExtensions>
@@ -491,8 +444,8 @@
                     <Source Name="MainSource">FmxAdvancedTestApp.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Composants Microsoft Office 2000 Sample Automation Server Wrapper</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Composants Microsoft Office XP Sample Automation Server Wrapper</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">

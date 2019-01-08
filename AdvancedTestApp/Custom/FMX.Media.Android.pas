@@ -124,8 +124,7 @@ uses
   Androidapi.JNI.Os, System.RTLConsts, Androidapi.Helpers,
   System.Math, System.SysUtils, System.SyncObjs, System.Generics.Collections,
   FMX.Consts, FMX.Types, FMX.Surfaces,
-  FMX.Graphics, FMX.Helpers.Android, FMX.Forms, FMX.Platform, 
-  FastUtils;
+  FMX.Graphics, FMX.Helpers.Android, FMX.Forms, FMX.Platform, FastUtils;
 
 const
   THEME_DARK_NOTITLE_FULLSCREEN = $0103000A;
