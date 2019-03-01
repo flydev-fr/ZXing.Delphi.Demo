@@ -68,6 +68,7 @@ uses
 	FMX.Ani,
 	FMX.Effects,
 	System.Permissions,
+  System.Rtti,
 	AudioManager;
 
 const
@@ -108,6 +109,7 @@ type
 		rectSlowWarning: TRectangle;
 		TimerShowHit: TTimer;
 		Label1: TLabel;
+    TimerAutoFocus: TTimer;
 		procedure FormCreate(Sender: TObject);
 		procedure FormDestroy(Sender: TObject);
 		procedure SwitchScanningSwitch(Sender: TObject);
@@ -116,6 +118,7 @@ type
 		procedure CameraComponent1SampleBufferReady(Sender: TObject; const ATime: TMediaTime);
 		procedure PopupBoxSettingChange(Sender: TObject);
 		procedure TimerShowHitTimer(Sender: TObject);
+    procedure TimerAutoFocusTimer(Sender: TObject);
 
 	private
 		FPermissionCamera: string;
@@ -144,7 +147,8 @@ type
 		procedure ActivateCameraPermissionRequestResult(Sender: TObject; const APermissions: TArray<string>;
 			const AGrantResults: TArray<TPermissionStatus>);
     procedure SyncBitmap;
-
+    procedure SetCameraParamaters;
+    procedure FocusReady;
 	end;
 
 var
@@ -157,10 +161,49 @@ uses
 	Androidapi.Helpers,
 	Androidapi.JNI.JavaTypes,
 	Androidapi.JNI.Os,
+  Androidapi.JNI.Hardware,
+  Androidapi.JNIBridge,
+  CameraConfigUtils,
 {$ENDIF}
 	FMX.DialogService;
 
 {$R *.fmx}
+
+type
+  TMyCamera = class(TCameraComponent)
+  end;
+
+{$IFDEF ANDROID}
+  TAndroidCameraCallback = class(TJavaLocal, JCamera_AutoFocusCallback)
+  private
+    [Weak] FFormMain: TFormMain;
+  public
+    procedure onAutoFocus(success: Boolean; camera: JCamera); cdecl;
+  end;
+
+  procedure TAndroidCameraCallback.onAutoFocus(success: Boolean; camera: JCamera); cdecl;
+  {$IFDEF ANDROID}
+  var
+    params: JCamera_Parameters;
+    area: JList;
+  {$ENDIF}
+  begin
+    FFormMain.FocusReady;
+    // camera.cancelAutoFocus();
+  end;
+
+var
+  CameraCallBack: TAndroidCameraCallback = nil;
+
+  function GetCameraCallBack: TAndroidCameraCallback;
+  begin
+    if CameraCallBack = nil then
+      CameraCallBack := TAndroidCameraCallback.Create;
+
+    Result := CameraCallBack;
+  end;
+{$ENDIF}
+
 
 procedure TFormMain.FormCreate(Sender: TObject);
 var
@@ -217,8 +260,8 @@ begin
 	if (Length(AGrantResults) = 1) and (AGrantResults[0] = TPermissionStatus.Granted) then
 	{ Fill the resolutions. }
 	begin
-		CameraComponent1.Quality := TVideoCaptureQuality.MediumQuality;
-		CameraComponent1.FocusMode := TFocusMode.AutoFocus;
+		CameraComponent1.Quality := TVideoCaptureQuality.PhotoQuality;
+		CameraComponent1.FocusMode := TFocusMode.ContinuousAutoFocus;
 	end
 	else
 		Showmessage('Cannot access the camera because the required permission has not been granted')
@@ -410,6 +453,68 @@ begin
 	end;
 end;
 
+procedure TFormMain.FocusReady;
+{$IFDEF ANDROID}
+var
+  JC: JCamera;
+  Device: TCaptureDevice;
+  ClassRef: TClass;
+  ctx: TRttiContext;
+  t: TRttiType;
+  previewSize: TSize;
+  params: JCamera_Parameters;
+  {$ENDIF}
+begin
+{$IFDEF ANDROID}
+  try
+    Device := TMyCamera(CameraComponent1).Device;
+
+    ClassRef := Device.ClassType;
+    ctx := TRttiContext.Create;
+    t := ctx.GetType(ClassRef);
+    JC := t.GetProperty('Camera').GetValue(Device).AsInterface as JCamera;
+    params := JC.getParameters;
+    // Params.setFocusMode(TJCamera_Parameters.JavaClass.FOCUS_MODE_MACRO); // crash on some devices
+    TCameraConfigUtils.setFocus(Params, true, false, true);
+    JC.setparameters(params);
+  finally
+    JC.startPreview();
+  end;
+{$ENDIF}
+end;
+
+procedure TFormMain.TimerAutoFocusTimer(Sender: TObject);
+{$IFDEF ANDROID}
+var
+  JC: JCamera;
+  Device: TCaptureDevice;
+  ClassRef: TClass;
+  ctx: TRttiContext;
+  t: TRttiType;
+  params: JCamera_Parameters;
+{$ENDIF}
+begin
+  if FActive = false then
+    Exit();
+
+{$IFDEF ANDROID}
+  Device := TMyCamera(CameraComponent1).Device;
+
+  ClassRef := Device.ClassType;
+  ctx := TRttiContext.Create;
+  try
+    t := ctx.GetType(ClassRef);
+    JC := t.GetProperty('Camera').GetValue(Device).AsInterface as JCamera;
+    JC.cancelAutoFocus;
+    GetCameraCallback().FFormMain := Self;
+    JC.autoFocus(GetCameraCallback());   // key - set it again
+    JC.startPreview;
+  finally
+    ctx.Free;
+  end;
+{$ENDIF}
+end;
+
 procedure TFormMain.TimerShowHitTimer(Sender: TObject);
 begin
 	FActive := True;
@@ -520,6 +625,45 @@ begin
 	end;
 
 	PopupBoxSetting.ItemIndex := -1;
+end;
+
+procedure TFormMain.SetCameraParamaters;
+{$IFDEF ANDROID}
+var
+  JC: JCamera;
+  Device: TCaptureDevice;
+  ClassRef: TClass;
+  ctx: TRttiContext;
+  t: TRttiType;
+  params: JCamera_Parameters;
+{$ENDIF}
+begin
+{$IFDEF ANDROID}
+  Device := TMyCamera(CameraComponent1).Device;
+
+  ClassRef := Device.ClassType;
+  ctx := TRttiContext.Create;
+  try
+    t := ctx.GetType(ClassRef);
+    JC := t.GetProperty('Camera').GetValue(Device).AsInterface as JCamera;
+    JC.cancelAutoFocus();
+
+    Params := JC.getParameters;
+    // TCameraConfigUtils.setBarcodeSceneMode(Params);
+    // TCameraConfigUtils.setVideoStabilization(Params);
+    TCameraConfigUtils.setFocus(Params, false, false, true);
+
+    JC.setParameters(params);
+    JC.startPreview();
+
+    GetCameraCallback().FFormMain := Self;
+    JC.autoFocus(GetCameraCallback());
+
+    TimerAutoFocus.Enabled := true;
+  finally
+    ctx.Free;
+  end;
+{$ENDIF}
 end;
 
 end.

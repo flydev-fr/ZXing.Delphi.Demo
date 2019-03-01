@@ -256,4 +256,10 @@ object FormMain: TFormMain
       end
     end
   end
+  object TimerAutoFocus: TTimer
+    Interval = 1600
+    OnTimer = TimerAutoFocusTimer
+    Left = 88
+    Top = 136
+  end
 end
