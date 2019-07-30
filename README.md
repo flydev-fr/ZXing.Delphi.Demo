@@ -6,7 +6,7 @@
 
 # Version
 
-Compile under **Delphi Rio 10.3.1**
+Compile under **Delphi Rio 10.3.2**
 
 Tested on 
 - Android 7.0 Nougat (API 24) 
@@ -20,6 +20,3 @@ Tested on
 1. https://github.com/Spelt/ZXing.Delphi/issues/78
 2. https://quality.embarcadero.com/browse/RSP-10592
 
-
-- Test #1: Version base [3.7](https://github.com/Spelt/ZXing.Delphi/tree/v3.7/demo/advancedTestApp) 
-- Test #2: Version base [3.8.1](https://github.com/Spelt/ZXing.Delphi/tree/v3.8.1/demo/advancedTestApp) 
